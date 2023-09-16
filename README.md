@@ -57,3 +57,8 @@ To disable the checksum verificación you can pass false to the second parameter
 ```typescript
 const json = TLV.toJSON('/* THE INPUT STRING */', false);
 ```
+
+In case of checksum error, this message will be displayed:
+```
+Checksum failed (Calculated: AAE6, Expected: 0989)
+```
