@@ -9,20 +9,29 @@ export class TLV {
      */
     public static toJSON = (data: string, checksum: boolean = true): any => {
 
-        if (checksum && !this.checkCRC(data)) {
-            throw new Error('Checksum failed');
+        if (checksum) {
+            this.checkCRC(data);
         }
 
         return TLV._parse(data);
     }
 
     protected static getCRC(data: string): string {
-        return crc.crc16ccitt(data).toString(16).toUpperCase();
+        return crc.crc16ccitt(data)
+            .toString(16)
+            .toUpperCase()
+            .padStart(4, "0");
     }
 
     protected static checkCRC(data: string, expected?: string): boolean {
         if (expected) {
-            return TLV.getCRC(data) === expected;
+            const crc16 = TLV.getCRC(data);
+
+            if (crc16 !== expected)
+                throw new Error(`Checksum failed (Calculated: ${crc16}, Expected: ${expected})`);
+
+            return true;
+
         } else {
             return TLV.checkCRC(
                 data.substring(0, data.length - 4),
