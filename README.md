@@ -31,9 +31,9 @@ The output result:
     "F53": "152",
     "F54": "10.0",
     "F58": "US",
-    "F59": "SHOP   ",
+    "F59": "SHOPIFY",
     "F60": "Beaumont",
-    "F63": "F556",
+    "F63": "0989",
     "F80": {
         "F00": "com.facebook.pay.options",
         "F01": "B0826260",
