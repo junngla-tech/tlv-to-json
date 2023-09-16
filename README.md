@@ -20,31 +20,32 @@ console.log(json.F80.F01); // Print B0826260
 The output result:
 ```json
 {
-    "F00": "01",
-    "F01": "12",
-    "F26": {
-        "F00": "com.facebook",
-        "F01": "597033953038",
-        "F02": "9990997"
-    },
-    "F52": "0000",
-    "F53": "152",
-    "F54": "10.0",
-    "F58": "US",
-    "F59": "SHOPIFY",
-    "F60": "Beaumont",
-    "F63": "0989",
-    "F80": {
-        "F00": "com.facebook.pay.options",
-        "F01": "B0826260",
-        "F02": "002",
-        "F03": "002"
-    },
-    "F81": {
-        "F00": "com.facebook.pay.options.uuid",
-        "F01": "28c729bb-0b23-4014-9974-da73573cbc84"
-    }
+  "F00": "01",
+  "F01": "12",
+  "F26": {
+    "F00": "com.facebook",
+    "F01": "597033953038",
+    "F02": "9990997"
+  },
+  "F52": "0000",
+  "F53": "152",
+  "F54": "10.0",
+  "F58": "US",
+  "F59": "SHOPIFY",
+  "F60": "Beaumont",
+  "F80": {
+    "F00": "com.facebook.pay.options",
+    "F01": "B0826260",
+    "F02": "002",
+    "F03": "002"
+  },
+  "F81": {
+    "F00": "com.facebook.pay.options.uuid",
+    "F01": "28c729bb-0b23-4014-9974-da73573cbc84"
+  },
+  "F63": "0989"
 }
+
 ```
 
 Please note field's names are prefixed with the letter `F`.
