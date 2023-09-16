@@ -45,7 +45,6 @@ The output result:
   },
   "F63": "0989"
 }
-
 ```
 
 Please note field's names are prefixed with the letter `F`.
