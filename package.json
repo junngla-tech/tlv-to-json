@@ -1,0 +1,43 @@
+{
+  "name": "tlv-to-json",
+  "version": "1.0.0",
+  "description": "A TLV string converter to JSON object",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "mocha",
+    "start": "ts-node example",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test",
+    "version": "git add -A src",
+    "postversion": "git push && git push --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skrosoft/tlv-to-json.git"
+  },
+  "bugs": {
+    "url": "https://github.com/skrosoft/tlv-to-json/issues"
+  },
+  "homepage": "https://github.com/skrosoft/tlv-to-json#readme",
+  "keywords": [
+    "tlv",
+    "tlv parser",
+    "tlv json"
+  ],
+  "author": "Vincent Guyard / @skrosoft",
+  "license": "GNU",
+  "dependencies": {
+    "crc": "^4.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.6.1",
+    "mocha": "^10.2.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  },
+  "files": [
+    "dist/**/*"
+  ]
+}
