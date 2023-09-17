@@ -23,7 +23,7 @@ jobs:
         run: |
           npm ci
           npm test
-          npm lint
+          npm run lint
 
   create-release:
     needs: build
@@ -40,7 +40,7 @@ jobs:
       - name: NPM install, lint, build and test
         run: |
           npm ci
-          npm lint
+          npm run lint
           npm test
       - name: Create Release
         uses: ncipollo/release-action@v1
