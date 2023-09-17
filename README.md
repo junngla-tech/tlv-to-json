@@ -6,19 +6,43 @@ The type and length are fixed in size, and the value field is of variable size.
 
 More information here: https://en.wikipedia.org/wiki/Type–length–value
 
-## Example
+## Simple example
 
-The input string:
+Complete input string:
+> 0105HELLO0205WORLD0304A943
+
+Calling the JSON parser:
+```typescript
+import { TLV } from 'tlv-to-json';
+
+const output = TLV.toJSON('/* THE INPUT STRING */');
+
+console.log(JSON.stringify(output, null, 2));
+```
+
+The output result:
+```json
+{
+  "T01": "HELLO",
+  "T02": "WORLD",
+  "T03": "A943"
+}
+```
+
+Please note types are prefixed with the letter `T`.
+
+## Advanced example
+
+Complete input string:
 > 00020101021226430012com.facebook011259703395303802079990997520400005303152540410.05802US5907SHOPIFY6008Beaumont80540024com.facebook.pay.options0108B08262600203002030300281730029com.facebook.pay.options.uuid013628c729bb-0b23-4014-9974-da73573cbc8463040989
 
 Calling the JSON parser:
 ```typescript
-// ./example.ts
 import { TLV } from 'tlv-to-json';
 
-const json = TLV.toJSON('/* THE INPUT STRING */');
+const output = TLV.toJSON('/* THE INPUT STRING */');
 
-console.log(json.F80.F01); // Print B0826260
+console.log(JSON.stringify(output, null, 2));
 ```
 
 The output result:
@@ -51,7 +75,7 @@ The output result:
 }
 ```
 
-Please note field's names are prefixed with the letter `T`.
+Please note types are prefixed with the letter `T`.
 
 ## CRC Check
 
