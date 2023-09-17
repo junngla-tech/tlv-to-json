@@ -1,19 +1,24 @@
 import crc from 'crc';
 
+/**
+ * The TLV main class of this library
+ */
 export class TLV {
 
     /**
      * This function parse a TLS string to a JSON object
      * @param data the string to parse
-     * @param checksum do the data parameter contains checksum?
+     * @param doValidateChecksum do the data parameter contains checksum?
      */
-    public static toJSON = (data: string, checksum: boolean = true): object => {
+    public static toJSON = (data: string, doValidateChecksum: boolean = true): object => {
 
-        if (checksum)
+        // Validation of the checksum
+        if (doValidateChecksum)
             this.checkCRCOrFail(data);
 
         try {
-            return TLV.parseDataOrFail(data)!;
+            // Trying to parse the input string
+            return TLV.parseDataOrFail(data);
         } catch (e) {
             throw new Error('Input string data is not valid');
         }
@@ -26,10 +31,10 @@ export class TLV {
      * @protected
      */
     protected static getCRC(data: string): string {
-        return crc.crc16ccitt(data)
-            .toString(16)
-            .toUpperCase()
-            .padStart(4, '0');
+        return crc.crc16ccitt(data) // Calculate the CRC16 hash
+            .toString(16) // Convert to hexadecimal
+            .toUpperCase() // Forcing uppercase
+            .padStart(4, '0'); // Forcing 4 chars length (16 bits)
     }
 
     /**
@@ -39,14 +44,17 @@ export class TLV {
      * @protected
      */
     protected static checkCRCOrFail(data: string, expected?: string): void {
-        if (!expected) return TLV.checkCRCOrFail(
-            data.substring(0, data.length - 4),
-            data.substring(data.length - 4),
+        // If no excepted parameter is passed
+        if (!expected) return TLV.checkCRCOrFail( // This function is calling himself
+            data.substring(0, data.length - 4), // Extracting the data without the last 4 digits (CRC)
+            data.substring(data.length - 4), // Extracting the last 4 digits (CRC)
         );
 
         if (expected) {
+            // Calculating the real CRC value
             const crc16 = TLV.getCRC(data);
 
+            // Checking if the calculated value matches the expected value
             if (crc16 !== expected)
                 throw new Error(`Checksum failed (Calculated: ${crc16}, Expected: ${expected})`);
         }
@@ -60,19 +68,26 @@ export class TLV {
      * @param depth the structure recursive depth
      * @protected
      */
-    protected static parseDataOrFail = (data: string, output : object = {}, offset: number = 0, depth: number = 0): undefined | object => {
+    protected static parseDataOrFail = (data: string, output : object = {}, offset: number = 0, depth: number = 0): object => {
 
-        const fieldId = TLV.getFieldType(data, offset);
+        // The TLV values (Type, Length, Value)
+        const fieldType = TLV.getFieldType(data, offset);
         const fieldLength = TLV.getFieldLength(data, offset);
-        const fieldValue = TLV.getFieldValue(data, fieldLength, offset);
+        let fieldValue: string | object = TLV.getFieldValue(data, fieldLength, offset);
 
         try {
-            output = {...output, ...{ [`F${fieldId}`] : this.parseDataOrFail(fieldValue, {}, 0, depth + 1)}};
-        } catch (e) {
-            output = {...output, ...{ [`F${fieldId}`] : fieldValue}};
+            // We try to parse the field value as a subfield
+            fieldValue = this.parseDataOrFail(fieldValue, {}, 0, depth + 1);
+        } catch {
+            // field is not an object, it doesn't matter, it's a field
+        } finally {
+            // We add the field (string or object) to the output object
+            output = {...output, ...{ [`F${fieldType}`] : fieldValue}};
         }
 
+        // Is there another field to process?
         if (TLV.getNextFieldOffset(data, offset, fieldLength) > 0) {
+            // If yes, we process the following field
             return this.parseDataOrFail(data, output, TLV.getNextFieldOffset(data, offset, fieldLength),  depth);
         }
 
