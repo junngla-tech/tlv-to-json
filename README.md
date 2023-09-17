@@ -8,19 +8,19 @@ More information here: https://en.wikipedia.org/wiki/Type–length–value
 
 ## Simple example
 
-Complete input string:
+Input string:
 > 0105HELLO0205WORLD0304A943
 
-Calling the JSON parser:
+Implementation:
 ```typescript
 import { TLV } from 'tlv-to-json';
 
-const output = TLV.toJSON('/* THE INPUT STRING */');
+const output = TLV.toJSON('/* PUT HERE THE INPUT STRING */');
 
 console.log(JSON.stringify(output, null, 2));
 ```
 
-The output result:
+Output JSON:
 ```json
 {
   "T01": "HELLO",
@@ -33,19 +33,19 @@ Please note types are prefixed with the letter `T`.
 
 ## Advanced example
 
-Complete input string:
+Input string:
 > 00020101021226430012com.facebook011259703395303802079990997520400005303152540410.05802US5907SHOPIFY6008Beaumont80540024com.facebook.pay.options0108B08262600203002030300281730029com.facebook.pay.options.uuid013628c729bb-0b23-4014-9974-da73573cbc8463040989
 
-Calling the JSON parser:
+Implementation:
 ```typescript
 import { TLV } from 'tlv-to-json';
 
-const output = TLV.toJSON('/* THE INPUT STRING */');
+const output = TLV.toJSON('/* PUT HERE THE INPUT STRING */');
 
 console.log(JSON.stringify(output, null, 2));
 ```
 
-The output result:
+Output JSON:
 ```json
 {
   "T00": "01",
