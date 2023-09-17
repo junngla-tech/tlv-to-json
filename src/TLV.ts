@@ -10,7 +10,7 @@ export class TLV {
     public static toJSON = (data: string, checksum: boolean = true): any => {
 
         if (checksum) {
-            this.checkCRC(data);
+            this.checkCRCOrFail(data);
         }
 
         return TLV._parse(data);
@@ -30,14 +30,13 @@ export class TLV {
     }
 
     /**
-     * Check the validity of checksum for the input string
+     * Check the validity of checksum for the input string and throw exception if not valid
      * @param data the input string to validate
      * @param expected the expected checksum
-     * @return boolean the validity of checksum between the input checksum and the calculated one
      * @protected
      */
-    protected static checkCRC(data: string, expected?: string): boolean {
-        if (!expected) return TLV.checkCRC(
+    protected static checkCRCOrFail(data: string, expected?: string): void {
+        if (!expected) return TLV.checkCRCOrFail(
             data.substring(0, data.length - 4),
             data.substring(data.length - 4),
         );
@@ -48,8 +47,6 @@ export class TLV {
             if (crc16 !== expected)
                 throw new Error(`Checksum failed (Calculated: ${crc16}, Expected: ${expected})`);
         }
-
-        return true;
     }
 
     /**
@@ -72,17 +69,22 @@ export class TLV {
             fieldValue = TLV.getFieldValue(data, fieldLength, offset);
         } catch (e) { return; }
 
-        const children = this._parse(fieldValue, {}, 0, depth + 1);
+        output[`F${fieldId}`] = this._parse(fieldValue, {}, 0, depth + 1) || fieldValue;
 
-        output[`F${fieldId}`] = children || fieldValue;
-
-        const nextOffset = offset + fieldLength + 4;
-
-        if (data.length > nextOffset) {
-            return this._parse(data, output, nextOffset, depth);
-        } else {
-            return output;
+        if (TLV.getNextFieldOffset(data, offset, fieldLength) > 0) {
+            return this._parse(data, output, TLV.getNextFieldOffset(data, offset, fieldLength),  depth);
         }
+
+        return output;
+    }
+
+    /**
+     * Get the next field to process offset
+     * @return number The next field offset or -1 if there is no more field to process
+     * @protected
+     */
+    protected static getNextFieldOffset = (data: string, offset: number, length: number) => {
+        return data.length > (offset + 2 + 2 + length) ? (offset + 2 + 2 + length) : -1;
     }
 
     /**
