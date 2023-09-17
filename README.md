@@ -6,7 +6,9 @@ The type and length are fixed in size, and the value field is of variable size.
 
 More information here: https://en.wikipedia.org/wiki/Type–length–value
 
-## Simple example
+## Examples
+
+### Simple example
 
 Input string:
 > 0105HELLO0205WORLD0304A943
@@ -31,7 +33,7 @@ Output JSON:
 
 Please note types are prefixed with the letter `T`.
 
-## Advanced example
+### Advanced example
 
 Input string:
 > 00020101021226430012com.facebook011259703395303802079990997520400005303152540410.05802US5907SHOPIFY6008Beaumont80540024com.facebook.pay.options0108B08262600203002030300281730029com.facebook.pay.options.uuid013628c729bb-0b23-4014-9974-da73573cbc8463040989
@@ -72,6 +74,43 @@ Output JSON:
     "T01": "28c729bb-0b23-4014-9974-da73573cbc84"
   },
   "T63": "0989"
+}
+```
+
+Please note types are prefixed with the letter `T`.
+
+### Recursive example
+
+Input string:
+> 0105HELLO0229012501210117011301090105WORLD03044369
+
+Implementation:
+```typescript
+import { TLV } from 'tlv-to-json';
+
+const output = TLV.toJSON('/* PUT HERE THE INPUT STRING */');
+
+console.log(JSON.stringify(output, null, 2));
+```
+
+Output JSON:
+```json
+{
+  "T01": "HELLO",
+  "T02": {
+    "T01": {
+      "T01": {
+        "T01": {
+          "T01": {
+            "T01": {
+              "T01": "WORLD"
+            }
+          }
+        }
+      }
+    }
+  },
+  "T03": "4369"
 }
 ```
 
