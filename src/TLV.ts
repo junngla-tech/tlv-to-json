@@ -9,11 +9,14 @@ export class TLV {
      */
     public static toJSON = (data: string, checksum: boolean = true): any => {
 
-        if (checksum) {
+        if (checksum)
             this.checkCRCOrFail(data);
-        }
 
-        return TLV._parse(data);
+        try {
+            return TLV.parseStringDataOrFail(data);
+        } catch (e) {
+            throw new Error("Input string data is not valid");
+        }
     }
 
     /**
@@ -57,22 +60,20 @@ export class TLV {
      * @param depth the structure recursive depth
      * @protected
      */
-    protected static _parse = (data: string, output : any = {}, offset: number = 0, depth: number = 0): undefined | any => {
+    protected static parseStringDataOrFail = (data: string, output : any = {}, offset: number = 0, depth: number = 0): undefined | any => {
 
-        let fieldId: string;
-        let fieldLength: number;
-        let fieldValue: string;
+        const fieldId = TLV.getFieldType(data, offset);
+        const fieldLength = TLV.getFieldLength(data, offset);
+        const fieldValue = TLV.getFieldValue(data, fieldLength, offset);
 
         try {
-            fieldId = TLV.getFieldType(data, offset);
-            fieldLength = TLV.getFieldLength(data, offset);
-            fieldValue = TLV.getFieldValue(data, fieldLength, offset);
-        } catch (e) { return; }
-
-        output[`F${fieldId}`] = this._parse(fieldValue, {}, 0, depth + 1) || fieldValue;
+            output[`F${fieldId}`] = this.parseStringDataOrFail(fieldValue, {}, 0, depth + 1);
+        } catch (e) {
+            output[`F${fieldId}`] = fieldValue;
+        }
 
         if (TLV.getNextFieldOffset(data, offset, fieldLength) > 0) {
-            return this._parse(data, output, TLV.getNextFieldOffset(data, offset, fieldLength),  depth);
+            return this.parseStringDataOrFail(data, output, TLV.getNextFieldOffset(data, offset, fieldLength),  depth);
         }
 
         return output;

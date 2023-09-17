@@ -3,7 +3,7 @@ const TLV = require('../dist');
 
 describe('TLS tests', () => {
 
-    it('Parsing string to JSON case 1', () => {
+    it('Normal valid input string', () => {
 
         const result = TLV.TLV.toJSON("" +
             "000201" +
@@ -56,7 +56,7 @@ describe('TLS tests', () => {
         '}'));
     });
 
-    it('Parsing string to JSON case 2', () => {
+    it('Valid input string when CRC starts with zero', () => {
 
         const result = TLV.TLV.toJSON("" +
             "000201" +
@@ -109,12 +109,27 @@ describe('TLS tests', () => {
         '}'));
     });
 
-    it('Parsing string to JSON case 3', () => {
+    it('Invalid Checksum on the input string', () => {
 
         try {
             TLV.TLV.toJSON("00020163040989");
         } catch (e) {
             assert.equal(e.message, "Checksum failed (Calculated: AAE6, Expected: 0989)")
         }
+    });
+
+    it('Invalid input string (length is not a number)', () => {
+
+        try {
+            TLV.TLV.toJSON("00020163R4AAE6", false);
+        } catch (e) {
+            assert.equal(e.message, "Input string data is not valid")
+        }
+    });
+
+    it('Ignore checksum validation', () => {
+
+        const result = TLV.TLV.toJSON("0002016304TEST", false);
+        assert.equal(JSON.stringify(result), '{"F00":"01","F63":"TEST"}');
     });
 });
