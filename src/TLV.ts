@@ -13,7 +13,7 @@ export class TLV {
             this.checkCRCOrFail(data);
 
         try {
-            return TLV.parseStringDataOrFail(data);
+            return TLV.parseDataOrFail(data);
         } catch (e) {
             throw new Error("Input string data is not valid");
         }
@@ -60,27 +60,27 @@ export class TLV {
      * @param depth the structure recursive depth
      * @protected
      */
-    protected static parseStringDataOrFail = (data: string, output : any = {}, offset: number = 0, depth: number = 0): undefined | any => {
+    protected static parseDataOrFail = (data: string, output : any = {}, offset: number = 0, depth: number = 0): undefined | any => {
 
         const fieldId = TLV.getFieldType(data, offset);
         const fieldLength = TLV.getFieldLength(data, offset);
         const fieldValue = TLV.getFieldValue(data, fieldLength, offset);
 
         try {
-            output[`F${fieldId}`] = this.parseStringDataOrFail(fieldValue, {}, 0, depth + 1);
+            output[`F${fieldId}`] = this.parseDataOrFail(fieldValue, {}, 0, depth + 1);
         } catch (e) {
             output[`F${fieldId}`] = fieldValue;
         }
 
         if (TLV.getNextFieldOffset(data, offset, fieldLength) > 0) {
-            return this.parseStringDataOrFail(data, output, TLV.getNextFieldOffset(data, offset, fieldLength),  depth);
+            return this.parseDataOrFail(data, output, TLV.getNextFieldOffset(data, offset, fieldLength),  depth);
         }
 
         return output;
     }
 
     /**
-     * Get the next field to process offset
+     * Get the offset of the next field to process
      * @return number The next field offset or -1 if there is no more field to process
      * @protected
      */
@@ -89,13 +89,15 @@ export class TLV {
     }
 
     /**
-     * Get a TLV field identifier
+     * Get a TLV field type
      * @param data the original string
      * @param offset the char offset from where we should start searching
      * @protected
      */
     protected static getFieldType = (data: string, offset: number = 0) => {
-        if (offset + 2 > data.length) throw new Error('This can\'t be a field type');
+        if (offset + 2 > data.length)
+            throw new Error('This can\'t be a field type');
+
         return data.substring(offset, offset + 2);
     }
 
@@ -106,10 +108,13 @@ export class TLV {
      * @protected
      */
     protected static getFieldLength = (data: string, offset: number = 0): number => {
-        if (offset + 4 > data.length) throw new Error('This can\'t be a field length');
-        const length = parseInt(data.substring(offset + 2, offset + 4), 10);
+        if (offset + 2 + 2 > data.length)
+            throw new Error('This can\'t be a field length');
 
-        if (isNaN(length) || length === 0) throw new Error('This can\'t be a field length');
+        const length = parseInt(data.substring(offset + 2, offset + 2 + 2), 10);
+
+        if (isNaN(length) || length === 0)
+            throw new Error('This can\'t be a field length');
 
         return length;
     }
@@ -122,7 +127,9 @@ export class TLV {
      * @protected
      */
     protected static getFieldValue = (data: string, length: number, offset: number = 0) => {
-        if (offset + 4 + length > data.length) throw new Error('This can\'t be a field value');
-        return data.substring(offset + 4, offset + 4 + length);
+        if (offset + 2 + 2 + length > data.length)
+            throw new Error('This can\'t be a field value');
+
+        return data.substring(offset + 2 + 2, offset + 2 + 2 + length);
     }
 }
