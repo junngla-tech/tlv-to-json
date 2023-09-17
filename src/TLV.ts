@@ -82,7 +82,7 @@ export class TLV {
             // field is not an object, it doesn't matter, it's a field
         } finally {
             // We add the field (string or object) to the output object
-            output = {...output, ...{ [`F${fieldType}`] : fieldValue}};
+            output = {...output, ...{ [`T${fieldType}`] : fieldValue}};
         }
 
         // Is there another field to process?

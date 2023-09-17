@@ -1,6 +1,10 @@
 # TLV string to JSON object
 
-This library provides a simple way to convert TLV complex string to a JSON object
+This library provides a simple way to convert TLV string to a JSON object. 
+
+The type and length are fixed in size, and the value field is of variable size.
+
+More information here: https://en.wikipedia.org/wiki/Type–length–value
 
 ## Example
 
@@ -20,34 +24,34 @@ console.log(json.F80.F01); // Print B0826260
 The output result:
 ```json
 {
-  "F00": "01",
-  "F01": "12",
-  "F26": {
-    "F00": "com.facebook",
-    "F01": "597033953038",
-    "F02": "9990997"
+  "T00": "01",
+  "T01": "12",
+  "T26": {
+    "T00": "com.facebook",
+    "T01": "597033953038",
+    "T02": "9990997"
   },
-  "F52": "0000",
-  "F53": "152",
-  "F54": "10.0",
-  "F58": "US",
-  "F59": "SHOPIFY",
-  "F60": "Beaumont",
-  "F80": {
-    "F00": "com.facebook.pay.options",
-    "F01": "B0826260",
-    "F02": "002",
-    "F03": "002"
+  "T52": "0000",
+  "T53": "152",
+  "T54": "10.0",
+  "T58": "US",
+  "T59": "SHOPIFY",
+  "T60": "Beaumont",
+  "T80": {
+    "T00": "com.facebook.pay.options",
+    "T01": "B0826260",
+    "T02": "002",
+    "T03": "002"
   },
-  "F81": {
-    "F00": "com.facebook.pay.options.uuid",
-    "F01": "28c729bb-0b23-4014-9974-da73573cbc84"
+  "T81": {
+    "T00": "com.facebook.pay.options.uuid",
+    "T01": "28c729bb-0b23-4014-9974-da73573cbc84"
   },
-  "F63": "0989"
+  "T63": "0989"
 }
 ```
 
-Please note field's names are prefixed with the letter `F`.
+Please note field's names are prefixed with the letter `T`.
 
 ## CRC Check
 
