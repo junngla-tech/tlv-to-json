@@ -19,8 +19,11 @@ jobs:
           registry-url: 'https://registry.npmjs.org/'
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - run: npm ci
-      - run: npm test
+      - name: NPM install, lint, build and test
+        run: |
+          npm ci
+          npm test
+          npm lint
 
   create-release:
     needs: build
@@ -34,11 +37,11 @@ jobs:
           registry-url: 'https://registry.npmjs.org/'
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - name: NPM install, build and test
+      - name: NPM install, lint, build and test
         run: |
-          npm install
-          npm run test
-          npm run build
+          npm ci
+          npm lint
+          npm test
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
