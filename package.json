@@ -1,6 +1,6 @@
 {
   "name": "tlv-to-json",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A TLV string converter to JSON object",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
