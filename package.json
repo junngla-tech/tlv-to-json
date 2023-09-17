@@ -1,6 +1,6 @@
 {
   "name": "tlv-to-json",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A TLV string converter to JSON object",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,18 +16,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/skrosoft/tlv-to-json.git"
+    "url": "git+https://github.com/junngla-tech/tlv-to-json.git"
   },
   "bugs": {
-    "url": "https://github.com/skrosoft/tlv-to-json/issues"
+    "url": "https://github.com/junngla-tech/tlv-to-json/issues"
   },
-  "homepage": "https://github.com/skrosoft/tlv-to-json#readme",
+  "homepage": "https://github.com/junngla-tech/tlv-to-json#readme",
   "keywords": [
     "tlv",
     "tlv parser",
     "tlv json"
   ],
-  "author": "Vincent Guyard / @skrosoft",
+  "author": "Junngla SPA Chile @junngla-tech",
   "license": "GNU",
   "dependencies": {
     "crc": "^4.3.2"
